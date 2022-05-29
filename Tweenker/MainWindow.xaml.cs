@@ -68,9 +68,9 @@ namespace Tweenker
             HomeView.Visibility = Visibility.Hidden; ;
         }
         #endregion
-        public void clickedPlaylist(string s)
+        public void clickedPlaylist(string name)
         {
-
+            
         }
         private void load()
         {
@@ -131,23 +131,23 @@ namespace Tweenker
             }
             #endregion
 
+
+
             try
             {
                 OleDbCommand cmd = new OleDbCommand("INSERT INTO playlistSettings(playlistname, biotext, bannerid, picid) " +
                 "VALUES ('" + nameTB.Text + "', '" + bioTB.Text + "', '" + bkey + "', '" + pkey + "')", DBConnection.con);
                 cmd.ExecuteNonQuery();
+
+                OleDbCommand cmd1 = new OleDbCommand("CREATE TABLE " + nameTB.Text + " (musicname varchar(255));", DBConnection.con);
+                cmd1.ExecuteNonQuery();
             }
             catch (Exception x)
             {
                 MessageBox.Show(x.Message);
             }
 
-        }
-        #endregion
-        private void addSongB_Click(object sender, RoutedEventArgs e)
-        {
-            addsong addsong = new addsong(this);
-            addsong.ShowDialog();
+
         }
         private void loadPlaylist()
         {
@@ -172,6 +172,12 @@ namespace Tweenker
                     playlistList.Children.Add(s);
                 }
             }
+        }
+        #endregion
+        private void addSongB_Click(object sender, RoutedEventArgs e)
+        {
+            addsong addsong = new addsong(this);
+            addsong.ShowDialog();
         }
         public void loadSongs()
         {

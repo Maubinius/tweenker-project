@@ -29,6 +29,7 @@ namespace Tweenker.uc
         private void SelectGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mw.selectPlaylist(this.nameL.Text);
+            mw.clickedPlaylist(this.nameL.Text);
         }
     }
 }
