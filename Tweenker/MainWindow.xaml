@@ -312,7 +312,13 @@
                 VerticalAlignment="Top"
                 Height="320"
                 Background="#606060">
-                <Image></Image>
+                <Image
+                    Name="cpBanner"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.EdgeMode="Aliased"
+                UseLayoutRounding="True"
+                        Stretch="Fill"
+                    ></Image>
             </Grid>
             <materialDesign:Card
                     VerticalAlignment="Top"
@@ -322,10 +328,17 @@
                     Width="250"
                     Background="#707070"
                     >
-                <Image></Image>
+                <Image
+                    Name="cpProfile"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.EdgeMode="Aliased"
+                UseLayoutRounding="True"
+                        Stretch="Fill"
+                    ></Image>
             </materialDesign:Card>
 
             <Label
+                Name="cpName"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
                 Content="Name"
@@ -336,6 +349,7 @@
                 Height="Auto"
                 ></Label>
             <Label
+                Name="cpBio"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
                 Content="Text"

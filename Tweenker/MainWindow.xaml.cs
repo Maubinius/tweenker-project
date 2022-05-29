@@ -70,7 +70,36 @@ namespace Tweenker
         #endregion
         public void clickedPlaylist(string name)
         {
-            
+            AddView.Visibility = Visibility.Hidden;
+            HomeView.Visibility = Visibility.Hidden;
+            FavView.Visibility = Visibility.Hidden;
+
+            ClickPlaylist.Visibility = Visibility.Visible;
+
+            OleDbCommand cmd = new OleDbCommand("SELECT * from playlistSettings WHERE playlistname='" + name + "';", DBConnection.con);
+            OleDbDataReader reader;
+            reader = cmd.ExecuteReader();
+
+            string pKey = "";
+            string bkey = "";
+            string bio = "";
+
+            if (reader.Read())
+            {
+                pKey = reader["picid"].ToString();
+                bkey = reader["bannerid"].ToString();
+                bio = reader["biotext"].ToString();
+            }
+            else
+            {
+                MessageBox.Show("DATA ERROR");
+                return;
+            }
+
+            cpName.Content = name;
+            cpBio.Content = bio;
+            cpProfile.Source = new BitmapImage(new Uri(@"..\Profile\ " + pKey +".png"));
+            cpBanner.Source = new BitmapImage(new Uri(@"..\Banner\ " + bkey + ".png"));
         }
         private void load()
         {
@@ -132,6 +161,8 @@ namespace Tweenker
             #endregion
 
 
+            File.Copy(bannerFileName, @"..\Banner\" + bkey + ".png");
+            File.Copy(profileFileName, @"..\Profile\" + pkey + ".png");
 
             try
             {
@@ -145,9 +176,11 @@ namespace Tweenker
             catch (Exception x)
             {
                 MessageBox.Show(x.Message);
+                File.Delete(@"..\Banner\" + bkey + ".png");
+                File.Delete(@"..\Profile\" + pkey + ".png");
             }
 
-
+            clickedPlaylist(nameTB.Text);
         }
         private void loadPlaylist()
         {
