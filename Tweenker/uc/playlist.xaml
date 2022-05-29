@@ -11,28 +11,26 @@
              >
     <Grid>
         <Grid
-            Background="#2b2b2b"
             >
             <materialDesign:Card
-                Margin="7"
+                MouseDown="SelectGrid_MouseDown"
                 Name="SelectGrid"
-                MouseEnter="SelectGrid_MouseEnter"
-                MouseLeave="SelectGrid_MouseLeave"
+                Margin="5"
                 Background="Transparent"
                 UniformCornerRadius="5"
                 BorderBrush="Transparent"
                 BorderThickness="1"
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
                 >
-                <Label
+                <TextBlock
                     Name="nameL"
-                Content="Test"
-                Foreground="Gray"
+                Text="Test"
+                Foreground="White"
                 FontSize="18"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Margin="5 0 0 2"
-                ></Label>
+                ></TextBlock>
             </materialDesign:Card>
         </Grid>
     </Grid>

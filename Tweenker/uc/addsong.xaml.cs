@@ -80,6 +80,7 @@ namespace Tweenker.uc
             loadingControl.IsIndeterminate = false;
             this.Close();
         }
+
         #region download mp3
 
         private void dwMP3(string VideoURL, string MP3Name)

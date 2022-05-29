@@ -27,7 +27,6 @@ namespace Tweenker.uc
             InitializeComponent();
             mw = mw1;
         }
-        public string url { get; set; }
         private void MainConainter_MouseEnter(object sender, MouseEventArgs e)
         {
             MainConainter.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#636363");
@@ -39,7 +38,7 @@ namespace Tweenker.uc
         private void MainConainter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             mw.selectSong(this.id);
-            mw.playSong(this.titleL.Text, this.memoL.Text, id.ToString());
+            mw.playSong(this.id);
         }
 
         public int id { get; set; }

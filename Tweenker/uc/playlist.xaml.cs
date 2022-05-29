@@ -20,23 +20,15 @@ namespace Tweenker.uc
     /// </summary>
     public partial class playlist : UserControl
     {
-        MainWindow mw1;
-        public playlist(MainWindow mw)
+        MainWindow mw;
+        public playlist(MainWindow mw1)
         {
             InitializeComponent();
-            mw1 = mw;
+            mw = mw1;
         }
-
-        private void SelectGrid_MouseEnter(object sender, MouseEventArgs e)
+        private void SelectGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            SelectGrid.Background = Brushes.Gray;
-            nameL.Foreground = Brushes.White;
-        }
-
-        private void SelectGrid_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SelectGrid.Background = Brushes.Transparent;
-            nameL.Foreground = Brushes.Gray;
+            mw.selectPlaylist(this.nameL.Text);
         }
     }
 }

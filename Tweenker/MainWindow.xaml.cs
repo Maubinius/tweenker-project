@@ -74,7 +74,7 @@ namespace Tweenker
         }
         private void load()
         {
-            loadEntrys();
+            loadPlaylist();
             loadSongs();
         }
 
@@ -144,23 +144,14 @@ namespace Tweenker
 
         }
         #endregion
-
-        #region Functions
-        private double SetProgressBarValue(double MousePosition)
-        {
-            double ratio = MousePosition / mainSlider.ActualWidth;
-            double ProgressBarValue = ratio * mainSlider.Maximum;
-            return ProgressBarValue;
-        }
-        #endregion
         private void addSongB_Click(object sender, RoutedEventArgs e)
         {
             addsong addsong = new addsong(this);
             addsong.ShowDialog();
         }
-        private void loadEntrys()
+        private void loadPlaylist()
         {
-            PageContainer.Children.Clear();
+            playlistList.Children.Clear();
             DataTable d = DBConnection.con.GetSchema("Tables");
             foreach (DataRow row in d.Rows)
             {
@@ -177,8 +168,8 @@ namespace Tweenker
                 else
                 {
                     playlist s = new playlist(this);
-                    s.nameL.Content = temp;
-                    PageContainer.Children.Add(s);
+                    s.nameL.Text = temp;
+                    playlistList.Children.Add(s);
                 }
             }
         }
@@ -229,19 +220,6 @@ namespace Tweenker
                 }
             }
         }
-        public void playSong(string songname, string memo, string id)
-        {
-            string url = @"..\Resources\" + songname + ";" + memo + ".mp3";
-            string filename = System.IO.Path.GetFullPath(url);
-            player.URL = filename;
-            player.controls.play();
-            songName.Text = songname;
-            songMemo.Text = memo;
-            playSongB.IsChecked = true;
-            int idV = Int32.Parse(id);
-            selectSong(idV);
-        }
-
         public void playSong(int id)
         {
             foreach (song c in songList.Children)
@@ -262,163 +240,227 @@ namespace Tweenker
                 }
             }
         }
-    public void stopSong()
-    {
-        player.controls.stop();
-    }
-    private void playSongB_Checked(object sender, RoutedEventArgs e)
-    {
-        playSongB.Content = new MaterialDesignThemes.Wpf.PackIcon { Kind = MaterialDesignThemes.Wpf.PackIconKind.PauseCircleOutline, Height = 37, Width = 37 };
-        player.controls.play();
-        startedSong = true;
-
-    }
-    private void playSongB_Unchecked(object sender, RoutedEventArgs e)
-    {
-        playSongB.Content = new MaterialDesignThemes.Wpf.PackIcon { Kind = MaterialDesignThemes.Wpf.PackIconKind.PlayCircleOutline, Height = 37, Width = 37 };
-        player.controls.pause();
-        startedSong = false;
-    }
-    private void soundSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        player.settings.volume = (int)soundSlider.Value;
-    }
-    private void mainSlider_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        double MousePosition = e.GetPosition(mainSlider).X;
-        double x = SetProgressBarValue(MousePosition);
-        player.controls.currentPosition = x;
-    }
-    public void selectSong(int id)
-    {
-        foreach (song c in songList.Children)
+        public void stopSong()
         {
-            if (c.id == id)
+            player.controls.stop();
+        }
+        private void playSongB_Checked(object sender, RoutedEventArgs e)
+        {
+            if (checkSongplay())
             {
-                c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
+                MessageBox.Show("Play a Song");
             }
             else
             {
-                c.Background = Brushes.Transparent;
+                playSongB.Content = new MaterialDesignThemes.Wpf.PackIcon { Kind = MaterialDesignThemes.Wpf.PackIconKind.PauseCircleOutline, Height = 37, Width = 37 };
+                player.controls.play();
+                startedSong = true;
             }
         }
-    }
-    private void mainSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        if (mainSlider.Value >= mainSlider.Maximum - 1)
+        private void playSongB_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (repeatSongB.IsChecked == false && randomSongB.IsChecked == false)
+            if (checkSongplay())
             {
-                nextSong();
+                MessageBox.Show("Play a Song");
             }
-
-            if (randomSongB.IsChecked == true)
+            else
             {
-                randomSong();
-            }
-
-            if (repeatSongB.IsChecked == true)
-            {
-                repeatSong();
+                playSongB.Content = new MaterialDesignThemes.Wpf.PackIcon { Kind = MaterialDesignThemes.Wpf.PackIconKind.PlayCircleOutline, Height = 37, Width = 37 };
+                player.controls.pause();
+                startedSong = false;
             }
         }
-    }
-
-    #region next song 
-    private void nextSong()
-    {
-        foreach (song c in songList.Children)
+        private void soundSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
-            {
-                    playSong(c.id);
-            }
+            player.settings.volume = (int)soundSlider.Value;
         }
-    }
-    private void nextSongB_Click(object sender, RoutedEventArgs e)
-    {
-        nextSong();
-    }
-    #endregion
-
-    #region previous song
-    private void previousSongB_Click(object sender, RoutedEventArgs e)
-    {
-        previousSong();
-    }
-    private void previousSong()
-    {
-        foreach (song c in songList.Children)
+        private void mainSlider_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int id = c.id - 1;
-            if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
+            double MousePosition = e.GetPosition(mainSlider).X;
+            double x = SetProgressBarValue(MousePosition);
+            player.controls.currentPosition = x;
+        }
+        public void selectSong(int id)
+        {
+            foreach (song c in songList.Children)
             {
-                foreach (song c1 in songList.Children)
+                if (c.id == id)
                 {
-                    if (id == c1.id)
+                    c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
+                }
+                else
+                {
+                    c.Background = Brushes.Transparent;
+                }
+            }
+        }
+        public void selectPlaylist(string name)
+        {
+            foreach (playlist c in playlistList.Children)
+            {
+                if (c.nameL.Text == name)
+                {
+                    c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
+                }
+                else
+                {
+                    c.Background = Brushes.Transparent;
+                }
+            }
+        }
+        private void mainSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (mainSlider.Value >= mainSlider.Maximum - 1)
+            {
+                if (repeatSongB.IsChecked == false && randomSongB.IsChecked == false)
+                {
+                    nextSong();
+                }
+
+                if (randomSongB.IsChecked == true)
+                {
+                    randomSong();
+                }
+
+                if (repeatSongB.IsChecked == true)
+                {
+                    repeatSong();
+                }
+            }
+        }
+        private bool checkSongplay()
+        {
+            if (songName.Text == "Your Song" && songMemo.Text == "Your Memo")
+                return true;
+            else
+                return false;
+        }
+
+        #region next song 
+        private void nextSong()
+        {
+            foreach (song c in songList.Children)
+            {
+                if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
+                {
+                    playSong(c.id + 1);
+                    return;
+                }
+            }
+        }
+        private void nextSongB_Click(object sender, RoutedEventArgs e)
+        {
+            if (checkSongplay())
+            {
+                MessageBox.Show("Play a Song");
+            }
+            else
+            {
+                if (randomSongB.IsChecked == true)
+                    randomSong();
+                else
+                    nextSong();
+            }
+        }
+        #endregion
+
+        #region previous song
+        private void previousSongB_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainSlider.Value <= 5)
+                previousSong();
+            else
+                repeatSong();
+        }
+        private void previousSong()
+        {
+            if (checkSongplay())
+            {
+                MessageBox.Show("Play a Song");
+            }
+            else
+            {
+                foreach (song c in songList.Children)
+                {
+                    int id = c.id - 1;
+                    if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
                     {
-                        playSong(c1.titleL.Text, c1.memoL.Text, c1.id.ToString());
-                        return;
+                        foreach (song c1 in songList.Children)
+                        {
+                            if (id == c1.id)
+                            {
+                                playSong(c1.id);
+                                return;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region repeat song
-    private void repeatSongB_Checked(object sender, RoutedEventArgs e)
-    {
-        repeatSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#368ab9");
-        randomSongB.IsChecked = false;
-    }
-    private void repeatSong()
-    {
-        foreach (song c in songList.Children)
+        #region repeat song
+        private void repeatSongB_Checked(object sender, RoutedEventArgs e)
         {
-            if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
+            repeatSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#368ab9");
+            randomSongB.IsChecked = false;
+        }
+        private void repeatSong()
+        {
+            foreach (song c in songList.Children)
             {
-                playSong(c.titleL.Text, c.memoL.Text, c.id.ToString());
+                if (songName.Text == c.titleL.Text && songMemo.Text == c.memoL.Text)
+                {
+                    playSong(c.id);
+                }
             }
         }
-    }
-    private void repeatSongB_Unchecked(object sender, RoutedEventArgs e)
-    {
-        repeatSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#616161");
-    }
-    #endregion
-
-    #region random song
-    private void randomSongB_Checked(object sender, RoutedEventArgs e)
-    {
-        randomSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#368ab9");
-        repeatSongB.IsChecked = false;
-    }
-    private void randomSong()
-    {
-        int v = 1;
-        for (int i = 0; i < songList.Children.Count - 1; i++)
+        private void repeatSongB_Unchecked(object sender, RoutedEventArgs e)
         {
-            v++;
+            repeatSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#616161");
         }
-        Random rnd = new Random();
-        v = rnd.Next(1, v);
-        foreach (song c in songList.Children)
+        #endregion
+
+        #region random song
+        private void randomSongB_Checked(object sender, RoutedEventArgs e)
         {
-            if (c.id == v)
+            randomSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#368ab9");
+            repeatSongB.IsChecked = false;
+        }
+        private void randomSong()
+        {
+            int v = 1;
+            for (int i = 0; i < songList.Children.Count - 1; i++)
             {
-                playSong(c.titleL.Text, c.memoL.Text, c.id.ToString());
-                return;
+                v++;
+            }
+            Random rnd = new Random();
+            v = rnd.Next(1, v);
+            foreach (song c in songList.Children)
+            {
+                if (c.id == v)
+                {
+                    playSong(c.id);
+                    return;
+                }
             }
         }
+        private void randomSongB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            randomSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#616161");
+        }
+        #endregion
+
+        #region Functions
+        private double SetProgressBarValue(double MousePosition)
+        {
+            double ratio = MousePosition / mainSlider.ActualWidth;
+            double ProgressBarValue = ratio * mainSlider.Maximum;
+            return ProgressBarValue;
+        }
+        #endregion
     }
-    private void randomSongB_Unchecked(object sender, RoutedEventArgs e)
-    {
-        randomSongB.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#616161");
-    }
-    #endregion
-}
 }
 
 
