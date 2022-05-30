@@ -64,6 +64,18 @@
                        Visibility="Hidden"
                        Name="showGif"
                        />
+
+                <Label
+                       HorizontalAlignment="Left"
+                       Height="Auto"
+                    Width="Auto"
+                       Margin="8 0 0 0"
+                       Visibility="Hidden"
+                    VerticalContentAlignment="Center"
+                    Content="{materialDesign:PackIcon Kind=Play, Size=20}"
+                    Foreground="White"
+                    Name="showPlay"
+                    ></Label>
             </Grid>
         </materialDesign:Card>
     </Grid>

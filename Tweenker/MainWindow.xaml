@@ -939,5 +939,7 @@
             MouseDown="mainSlider_MouseDown"
             ValueChanged="mainSlider_ValueChanged"
             ></ProgressBar>
+        
+        
     </Grid>
 </Window>

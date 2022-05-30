@@ -32,10 +32,12 @@ namespace Tweenker.uc
         private void MainConainter_MouseEnter(object sender, MouseEventArgs e)
         {
             MainConainter.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#636363");
+            showPlay.Visibility = Visibility.Visible;
         }
         private void MainConainter_MouseLeave(object sender, MouseEventArgs e)
         {
             MainConainter.Background = Brushes.Transparent;
+            showPlay.Visibility = Visibility.Hidden;
         }
         private void MainConainter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
