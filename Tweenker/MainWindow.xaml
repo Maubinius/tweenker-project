@@ -11,8 +11,6 @@
         MinWidth="1200"
         Height="750"
         Width="1200"
-        MaxHeight="750"
-        MaxWidth="1200"
         WindowStartupLocation="CenterScreen"
         >
     <Grid
@@ -114,10 +112,79 @@
                     />
                 </StackPanel>
                 <ScrollViewer
-                    Margin="0 47 0 45"
+                    Margin="0 46 0 45"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     >
+                    <ScrollViewer.Resources>
+                        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                        <Grid x:Name="Grid">
+                                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                                            <Border x:Name="ScrollBarRectangle" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Tag" Value="Horizontal">
+                                                <Setter TargetName="ScrollBarRectangle" Property="Width" Value="Auto" />
+                                                <Setter TargetName="ScrollBarRectangle" Property="Height" Value="7" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="{x:Type ScrollBar}">
+                            <Setter Property="Margin" Value="-5,0,0,0" />
+                            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                            <Setter Property="Foreground" Value="#FF8C8C8C" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Width" Value="8" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                        <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                                            <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                                <Track.Thumb>
+                                                    <Thumb x:Name="ScrollBarThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource ScrollThumbs}" />
+                                                </Track.Thumb>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                                </Track.DecreaseRepeatButton>
+                                            </Track>
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter TargetName="ScrollBarThumb" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger Property="Orientation" Value="Horizontal">
+                                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="-90" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="-90" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="Width" Value="Auto" />
+                                                <Setter Property="Height" Value="8" />
+                                                <Setter TargetName="ScrollBarThumb" Property="Tag" Value="Horizontal" />
+                                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ScrollViewer.Resources>
                     <WrapPanel
                     Orientation="Vertical"
                                         Name="playlistList"
@@ -283,24 +350,25 @@
                     BorderThickness="0"
                     ></Button>
             </Grid>
-            <Label
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Left"
+            <Grid
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Margin="0 350 0 0"
+                >
+                <Label
                 Foreground="White"
                 Content="{materialDesign:PackIcon Kind=Update, Size=160}"
-                Margin="75"
                 ></Label>
             <TextBlock
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Left"
                 Foreground="White"
                 FontSize="30"
                 xml:space="preserve"
-                Margin="130 50 0 76"
+                Margin="40 6 0 0"
                 >
                 Unfortunately there is nothing here yet, 
                 wait for the next update :)
             </TextBlock>
+            </Grid>
         </Grid>
         <Grid
             Name="ClickPlaylist"
@@ -418,13 +486,11 @@
                 </materialDesign:Card.Background>
             </materialDesign:Card>
             <Grid
-            Width="882"
             Height="50"
-            HorizontalAlignment="Center"
+                Width="Auto"
             Background="Transparent"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
                     VerticalAlignment="Top"
-                    Margin="0 70 0 0"
+                    Margin="30 70 30 0"
             >
                 <Grid>
                     <TextBlock
@@ -473,11 +539,80 @@
                 VerticalScrollBarVisibility="Auto"
                 HorizontalScrollBarVisibility="Disabled"
                 >
-                <WrapPanel
-                x:FieldModifier="public"
-                Orientation="Vertical"
+                <ScrollViewer.Resources>
+                    <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Grid x:Name="Grid">
+                                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                                        <Border x:Name="ScrollBarRectangle" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="Tag" Value="Horizontal">
+                                            <Setter TargetName="ScrollBarRectangle" Property="Width" Value="Auto" />
+                                            <Setter TargetName="ScrollBarRectangle" Property="Height" Value="7" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Margin" Value="-5,0,0,0" />
+                        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                        <Setter Property="Foreground" Value="#FF8C8C8C" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Width" Value="8" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                            <Track.Thumb>
+                                                <Thumb x:Name="ScrollBarThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource ScrollThumbs}" />
+                                            </Track.Thumb>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                            </Track.DecreaseRepeatButton>
+                                        </Track>
+                                    </Grid>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter TargetName="ScrollBarThumb" Property="Visibility" Value="Collapsed" />
+                                        </Trigger>
+                                        <Trigger Property="Orientation" Value="Horizontal">
+                                            <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="-90" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="-90" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Setter Property="Height" Value="8" />
+                                            <Setter TargetName="ScrollBarThumb" Property="Tag" Value="Horizontal" />
+                                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+                <StackPanel
+                    Orientation="Vertical"
+                    VerticalAlignment="Top"
                 Name="songList"
-                ></WrapPanel>
+                ></StackPanel>
             </ScrollViewer>
         </Grid>
         <Grid
@@ -664,6 +799,7 @@
             </materialDesign:Card>
         </Grid>
         <!--#endregion-->
+
         <ProgressBar
             Name="mainSlider"
             VerticalAlignment="Bottom"

@@ -52,6 +52,8 @@ namespace Tweenker
             AddView.Visibility = Visibility.Hidden;
             ClickPlaylist.Visibility = Visibility.Hidden;
             FavView.Visibility = Visibility.Hidden;
+
+            selectPlaylist(null);
         }
         private void addB_Click(object sender, RoutedEventArgs e)
         {
@@ -59,13 +61,17 @@ namespace Tweenker
             ClickPlaylist.Visibility = Visibility.Hidden;
             HomeView.Visibility = Visibility.Hidden;
             FavView.Visibility = Visibility.Hidden;
+
+            selectPlaylist(null);
         }
         private void favB_Click(object sender, RoutedEventArgs e)
         {
             FavView.Visibility = Visibility.Visible;
             AddView.Visibility = Visibility.Hidden;
             ClickPlaylist.Visibility = Visibility.Hidden;
-            HomeView.Visibility = Visibility.Hidden; ;
+            HomeView.Visibility = Visibility.Hidden;
+
+            selectPlaylist(null);
         }
         #endregion
         public void clickedPlaylist(string name)
@@ -98,8 +104,10 @@ namespace Tweenker
 
             cpName.Content = name;
             cpBio.Content = bio;
-            cpProfile.Source = new BitmapImage(new Uri(@"..\Profile\ " + pKey +".png"));
-            cpBanner.Source = new BitmapImage(new Uri(@"..\Banner\ " + bkey + ".png"));
+            string profilePath = System.IO.Path.GetFullPath(@"..\Profile\" + pKey + ".png");
+            string bannerPath = System.IO.Path.GetFullPath(@"..\Banner\" + bkey + ".png");
+            cpProfile.Source = new BitmapImage(new Uri(profilePath));
+            cpBanner.Source = new BitmapImage(new Uri(bannerPath));
         }
         private void load()
         {
@@ -179,8 +187,10 @@ namespace Tweenker
                 File.Delete(@"..\Banner\" + bkey + ".png");
                 File.Delete(@"..\Profile\" + pkey + ".png");
             }
-
+            loadPlaylist();
+            selectPlaylist(nameTB.Text);
             clickedPlaylist(nameTB.Text);
+            clearB_Click(null, null);
         }
         private void loadPlaylist()
         {
@@ -326,15 +336,26 @@ namespace Tweenker
                 if (c.id == id)
                 {
                     c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
+                    c.showGif.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     c.Background = Brushes.Transparent;
+                    c.showGif.Visibility = Visibility.Hidden;
                 }
             }
         }
         public void selectPlaylist(string name)
         {
+            if (name == null)
+            {
+                foreach (playlist c in playlistList.Children)
+                {
+                    c.Background = Brushes.Transparent;
+                }
+                return;
+            }
+
             foreach (playlist c in playlistList.Children)
             {
                 if (c.nameL.Text == name)

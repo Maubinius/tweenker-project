@@ -5,11 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Tweenker.uc"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             Width="925"
+             HorizontalAlignment="Stretch"
              Height="55"
+             MinWidth="600"
+             
              >
-    <Grid>
+    <Grid
+        >
         <materialDesign:Card
             MouseDoubleClick="MainConainter_MouseDoubleClick"
             Name="MainConainter"
@@ -24,14 +28,14 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Foreground="White"
-                Margin="30 0 0 0"
+                Margin="40 0 0 0"
                 FontSize="18"
                     Width="360"
                                     TextAlignment="Left"
                 TextTrimming="CharacterEllipsis"
                 ></TextBlock>
 
-            <TextBlock
+                <TextBlock
                 Width="360"
                 Name="memoL"
                 VerticalAlignment="Center"
@@ -51,6 +55,14 @@
                 Margin="0 0 45 0"
                 FontSize="18"
                     ></TextBlock>
+
+                <Image gif:ImageBehavior.AnimatedSource="../img/soundplay.gif" 
+                       HorizontalAlignment="Left"
+                       Height="20"
+                       Margin="10 2 0 0"
+                       Visibility="Hidden"
+                       Name="showGif"
+                       />
             </Grid>
         </materialDesign:Card>
     </Grid>
