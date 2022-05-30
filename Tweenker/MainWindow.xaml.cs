@@ -217,36 +217,11 @@ namespace Tweenker
             }
         }
         #endregion
+
         private void addSongB_Click(object sender, RoutedEventArgs e)
         {
             addsong addsong = new addsong(this);
             addsong.ShowDialog();
-        }
-        public void loadSongs()
-        {
-            int id = 1;
-            var files = Directory.GetFiles(@"..\Resources\", "*").OrderByDescending(d => new FileInfo(d).CreationTime);
-            foreach (string file in files)
-            {
-                WindowsMediaPlayer wmp = new WindowsMediaPlayer();
-                string getInfo = System.IO.Path.GetFullPath(file);
-                IWMPMedia mi = wmp.newMedia(getInfo);
-                string lengthV = mi.durationString;
-
-                string filename = System.IO.Path.GetFileName(file);
-                filename = filename.Replace(".mp3", "");
-                string memoV = filename.Substring(filename.LastIndexOf(';') + 1);
-                filename = filename.Replace(memoV, "");
-                string titleV = filename.Remove(filename.Length - 1);
-
-                song s = new song(this);
-                s.titleL.Text = titleV;
-                s.memoL.Text = memoV;
-                s.lengthL.Text = lengthV;
-                s.id = id;
-                id++;
-                songList.Children.Add(s);
-            }
         }
         private void timer_tick(object sender, EventArgs e)
         {
@@ -268,30 +243,6 @@ namespace Tweenker
                     MessageBox.Show(x.Message);
                 }
             }
-        }
-        public void playSong(int id)
-        {
-            foreach (song c in songList.Children)
-            {
-                if (id == c.id)
-                {
-                    string songname = c.titleL.Text;
-                    string memo = c.memoL.Text;
-                    string url = @"..\Resources\" + songname + ";" + memo + ".mp3";
-                    string filename = System.IO.Path.GetFullPath(url);
-                    player.URL = filename;
-                    player.controls.play();
-                    songName.Text = songname;
-                    songMemo.Text = memo;
-                    playSongB.IsChecked = true;
-                    selectSong(id);
-                    return;
-                }
-            }
-        }
-        public void stopSong()
-        {
-            player.controls.stop();
         }
         private void playSongB_Checked(object sender, RoutedEventArgs e)
         {
@@ -328,22 +279,6 @@ namespace Tweenker
             double MousePosition = e.GetPosition(mainSlider).X;
             double x = SetProgressBarValue(MousePosition);
             player.controls.currentPosition = x;
-        }
-        public void selectSong(int id)
-        {
-            foreach (song c in songList.Children)
-            {
-                if (c.id == id)
-                {
-                    c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
-                    c.showGif.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    c.Background = Brushes.Transparent;
-                    c.showGif.Visibility = Visibility.Hidden;
-                }
-            }
         }
         public void selectPlaylist(string name)
         {
@@ -388,6 +323,28 @@ namespace Tweenker
                 }
             }
         }
+
+        #region --Song
+        public void stopSong()
+        {
+            player.controls.stop();
+        }
+        public void selectSong(int id)
+        {
+            foreach (song c in songList.Children)
+            {
+                if (c.id == id)
+                {
+                    c.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#4a4a4a");
+                    c.showGif.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    c.Background = Brushes.Transparent;
+                    c.showGif.Visibility = Visibility.Hidden;
+                }
+            }
+        }
         private bool checkSongplay()
         {
             if (songName.Text == "Your Song" && songMemo.Text == "Your Memo")
@@ -395,6 +352,53 @@ namespace Tweenker
             else
                 return false;
         }
+        public void loadSongs()
+        {
+            int id = 1;
+            var files = Directory.GetFiles(@"..\Resources\", "*").OrderByDescending(d => new FileInfo(d).CreationTime);
+            foreach (string file in files)
+            {
+                WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+                string getInfo = System.IO.Path.GetFullPath(file);
+                IWMPMedia mi = wmp.newMedia(getInfo);
+                string lengthV = mi.durationString;
+
+                string filename = System.IO.Path.GetFileName(file);
+                filename = filename.Replace(".mp3", "");
+                string memoV = filename.Substring(filename.LastIndexOf(';') + 1);
+                filename = filename.Replace(memoV, "");
+                string titleV = filename.Remove(filename.Length - 1);
+
+                song s = new song(this);
+                s.titleL.Text = titleV;
+                s.memoL.Text = memoV;
+                s.lengthL.Text = lengthV;
+                s.id = id;
+                id++;
+                songList.Children.Add(s);
+            }
+        }
+        public void playSong(int id)
+        {
+            foreach (song c in songList.Children)
+            {
+                if (id == c.id)
+                {
+                    string songname = c.titleL.Text;
+                    string memo = c.memoL.Text;
+                    string url = @"..\Resources\" + songname + ";" + memo + ".mp3";
+                    string filename = System.IO.Path.GetFullPath(url);
+                    player.URL = filename;
+                    player.controls.play();
+                    songName.Text = songname;
+                    songMemo.Text = memo;
+                    playSongB.IsChecked = true;
+                    selectSong(id);
+                    return;
+                }
+            }
+        }
+        #endregion
 
         #region next song 
         private void nextSong()

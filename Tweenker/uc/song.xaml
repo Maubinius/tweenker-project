@@ -17,6 +17,7 @@
         <materialDesign:Card
             MouseDoubleClick="MainConainter_MouseDoubleClick"
             Name="MainConainter"
+            MouseDown="MainConainter_MouseDown"
             MouseEnter="MainConainter_MouseEnter"
             MouseLeave="MainConainter_MouseLeave"
             Background="Transparent"

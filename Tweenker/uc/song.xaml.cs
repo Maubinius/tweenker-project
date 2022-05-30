@@ -27,6 +27,8 @@ namespace Tweenker.uc
             InitializeComponent();
             mw = mw1;
         }
+        public int id { get; set; }
+
         private void MainConainter_MouseEnter(object sender, MouseEventArgs e)
         {
             MainConainter.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#636363");
@@ -41,6 +43,13 @@ namespace Tweenker.uc
             mw.playSong(this.id);
         }
 
-        public int id { get; set; }
+        private void MainConainter_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Right)
+            {
+                
+            }
+            e.Handled = true;
+        }
     }
 }

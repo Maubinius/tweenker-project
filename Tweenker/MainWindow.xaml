@@ -17,7 +17,7 @@
         Name="MainView"
         >
         <Grid
-        Name="StaticControl"
+        Name="StaticControls"
         >
             <!--#region LeftCointainer-->
             <Grid
@@ -376,19 +376,95 @@
             Background="#404040"
             Visibility="Hidden"
             >
-            <Grid
+            <ScrollViewer
+               Margin="0 0 0 60"
+                Background="Transparent"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                >
+                <ScrollViewer.Resources>
+                    <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Grid x:Name="Grid">
+                                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                                        <Border x:Name="ScrollBarRectangle" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="Tag" Value="Horizontal">
+                                            <Setter TargetName="ScrollBarRectangle" Property="Width" Value="Auto" />
+                                            <Setter TargetName="ScrollBarRectangle" Property="Height" Value="7" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Margin" Value="-5,0,0,0" />
+                        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                        <Setter Property="Foreground" Value="#FF8C8C8C" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Width" Value="8" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                            <Track.Thumb>
+                                                <Thumb x:Name="ScrollBarThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource ScrollThumbs}" />
+                                            </Track.Thumb>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                            </Track.DecreaseRepeatButton>
+                                        </Track>
+                                    </Grid>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter TargetName="ScrollBarThumb" Property="Visibility" Value="Collapsed" />
+                                        </Trigger>
+                                        <Trigger Property="Orientation" Value="Horizontal">
+                                            <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="-90" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="-90" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Setter Property="Height" Value="8" />
+                                            <Setter TargetName="ScrollBarThumb" Property="Tag" Value="Horizontal" />
+                                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+                <Grid>
+                    <Grid
                 VerticalAlignment="Top"
                 Height="320"
                 Background="#606060">
-                <Image
+                        <Image
                     Name="cpBanner"
                     RenderOptions.BitmapScalingMode="HighQuality"
                 RenderOptions.EdgeMode="Aliased"
                 UseLayoutRounding="True"
                         Stretch="Fill"
                     ></Image>
-            </Grid>
-            <materialDesign:Card
+                    </Grid>
+                    <materialDesign:Card
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     Margin="30 35 0 0"
@@ -396,16 +472,16 @@
                     Width="250"
                     Background="#707070"
                     >
-                <Image
+                        <Image
                     Name="cpProfile"
                     RenderOptions.BitmapScalingMode="HighQuality"
                 RenderOptions.EdgeMode="Aliased"
                 UseLayoutRounding="True"
                         Stretch="Fill"
                     ></Image>
-            </materialDesign:Card>
+                    </materialDesign:Card>
 
-            <Label
+                    <Label
                 Name="cpName"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -416,7 +492,7 @@
                 Width="600"
                 Height="Auto"
                 ></Label>
-            <Label
+                    <Label
                 Name="cpBio"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -427,6 +503,60 @@
                 Width="600"
                 Height="200"
                 ></Label>
+                    <Grid
+                        VerticalAlignment="Top"
+                        Margin="0 320 0 0"
+                        Height="50"
+                        >
+                        <TextBlock
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Foreground="White"
+                Margin="40 0 0 0"
+                FontSize="18"
+                    Width="360"
+                 TextAlignment="Left"
+                            Text="Name"
+                            FontWeight="SemiBold"
+                ></TextBlock>
+
+                        <TextBlock
+                Width="360"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Foreground="White"
+                Margin="0 0 120 0"
+                FontSize="18"
+                TextAlignment="Right"
+                            Text="Memo"
+                            FontWeight="SemiBold"
+                ></TextBlock>
+
+                        <TextBlock
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Foreground="White"
+                Margin="0 0 30 0"
+                FontSize="18"
+                            Text="Duration"
+                            FontWeight="SemiBold"
+                    ></TextBlock>
+                        <Grid
+                        Height="1"
+                        Background="White"
+                        VerticalAlignment="Bottom"
+                            Margin="40 0 30 0"
+                        ></Grid>
+                    </Grid>
+
+                    <StackPanel
+                    Orientation="Vertical"
+                    Name="cpsongList"
+                    Margin="0 370 0 0"
+                ></StackPanel>
+
+                </Grid>
+            </ScrollViewer>
         </Grid>
         <Grid
             x:Name="HomeView"
